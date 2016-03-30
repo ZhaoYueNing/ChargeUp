@@ -2,15 +2,19 @@ package com.zhao.ChargeUp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhao.ChargeUp.unit.Record;
 import com.zhao.ChargeUp.unit.User;
@@ -71,6 +75,35 @@ public class MainFragment extends Fragment {
                         .add(R.id.fragme_main,new UserManagerFragment(MainFragment.this))
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+        //设置对listview 每一个条目长按的监听 长按删除
+        lv_recodes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("提示");
+                builder.setCancelable(false);
+                builder.setMessage("是否删除该条收支记录，删除后对应的金额总量同时将被调整");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (currentUser.removeRecord(position)) {
+                            Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
+                            refurbish();
+                        } else {
+                            Toast.makeText(getActivity(), "删除失败", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.create().show();
+                return false;
             }
         });
         return view;

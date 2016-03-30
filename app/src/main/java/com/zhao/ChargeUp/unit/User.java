@@ -2,6 +2,8 @@ package com.zhao.ChargeUp.unit;
 
 import android.widget.Toast;
 
+import com.zhao.ChargeUp.MainFragment;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -78,5 +80,45 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    /**
+     * 删除一条收支记录
+     * @param position 删除的位置
+     * @return 如果删除成功返回true 失败返回false
+     */
+    public boolean removeRecord(int position) {
+        if (position >= records.size()) {
+            return false;
+        }
+        Record removedRecord = records.remove(position);
+        if (removedRecord.getRecordType() == Record.EXPEND) {
+            this.amount+=removedRecord.getSum();
+        }else{
+            this.amount-=removedRecord.getSum();
+        }
+        return true;
+    }
+
+    /**
+     * 删除User
+     * @param position 在Users中的位置
+     * @return 成功返回true 失败返回false
+     */
+    public static boolean removeUser(int position) {
+        if (position >= User.users.size()) {
+            return false;
+        }
+
+        if (User.users.size() == 0) {
+            return false;
+        }
+
+        User removedUser = User.users.remove(position);
+        //如果被删除用户为当前用户则将第一个用户设置为当前用户
+        if (removedUser.isCurrentUser()) {
+            User.users.get(0).setCurrentUser();
+        }
+        return true;
     }
 }

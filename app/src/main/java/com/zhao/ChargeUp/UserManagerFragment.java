@@ -2,11 +2,14 @@ package com.zhao.ChargeUp;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -73,6 +76,34 @@ public class UserManagerFragment extends Fragment {
             }
         });
         lv_users.setAdapter(usersAdapter);
+        lv_users.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("提示");
+                builder.setMessage("请确定是否删除该用户，被删除后该用户的所有数据将被清除");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        boolean b = User.removeUser(position);
+                        if (b) {
+                            Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), "删除失败，至少要保留一位用户", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //有用户变动情况下的刷新
+                        refurbish();
+                    }
+                });
+                builder.setNegativeButton("CANCAL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                });
+                builder.create().show();
+                return false;
+            }
+        });
         return view;
     }
     public void refurbish(){

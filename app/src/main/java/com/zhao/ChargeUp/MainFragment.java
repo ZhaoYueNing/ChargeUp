@@ -35,7 +35,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //添加23条测试数据
-        testAddData(23);
+        if (User.getCurrentUser()==null)
+            testAddData(23);
         currentUser = User.getCurrentUser();
 
         View view = inflater.inflate(R.layout.fragme_main,container,false);

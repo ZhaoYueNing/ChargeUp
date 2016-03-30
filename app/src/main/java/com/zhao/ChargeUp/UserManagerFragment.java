@@ -48,6 +48,9 @@ public class UserManagerFragment extends Fragment {
                             .addToBackStack(null)
                             .commit();
                 }else{
+                    if (User.getUsers().size() >= 10) {
+                        Toast.makeText(getActivity(), "已达到用户最大数量，无法添加", Toast.LENGTH_SHORT).show();
+                    }
                     EditText et_userName = (EditText) container.findViewById(R.id.et_userName);
                     EditText et_initSum = (EditText) container.findViewById(R.id.et_initSum);
 

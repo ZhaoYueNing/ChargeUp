@@ -32,13 +32,12 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:textSize="20sp"
-                    android:text="@string/user_default"
                     android:id="@+id/tv_currentUserName" />
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textSize="20sp"
-                    android:text="选择用户"
+                    android:text="切换用户"
                     android:id="@+id/bt_selectUser" />
             </LinearLayout>
             <LinearLayout

@@ -1,5 +1,6 @@
 package com.zhao.ChargeUp.unit;
 
+import android.util.Log;
 import android.widget.Toast;
 
 import com.zhao.ChargeUp.MainFragment;
@@ -68,6 +69,9 @@ public class User {
         User.currentUser = this;
     }
 
+    public static void setCurrentUser(int position) {
+        User.currentUser = users.get(position);
+    }
     public static User getCurrentUser() {
         return User.currentUser;
     }
@@ -106,7 +110,8 @@ public class User {
      * @return 成功返回true 失败返回false
      */
     public static boolean removeUser(int position) {
-        if (position >= User.users.size()) {
+        //只剩一个用户时删除用户失败
+        if (users.size()<=1) {
             return false;
         }
 

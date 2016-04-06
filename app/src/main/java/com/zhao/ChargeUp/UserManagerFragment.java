@@ -76,6 +76,16 @@ public class UserManagerFragment extends Fragment {
             }
         });
         lv_users.setAdapter(usersAdapter);
+        //短按item 选择当前用户 并刷新
+        lv_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                User.setCurrentUser(position);
+                refurbish();
+                Toast.makeText(getActivity(), "切换到用户："+User.getUsers().get(position).getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        //长按用户 可以删除用户
         lv_users.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -106,6 +116,7 @@ public class UserManagerFragment extends Fragment {
         });
         return view;
     }
+    //用户出现变更时刷新数据
     public void refurbish(){
         usersAdapter.notifyDataSetChanged();
         mainFragment.refurbish(true);

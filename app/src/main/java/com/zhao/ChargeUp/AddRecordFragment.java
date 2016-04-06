@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.widget.LinearLayout;
@@ -35,14 +36,16 @@ public class AddRecordFragment extends Fragment {
     private TextView tv_clock;
     private TextView tv_calendar;
     private MainFragment mainFragment;
+    private static AddRecordFragment thisFragment;
     //记录时间
-    private Date date;
+    private static Date date;
     private View view;
 
 
     public AddRecordFragment(MainFragment fragment) {
         this.user = User.getCurrentUser();
         this.mainFragment = fragment;
+        thisFragment = this;
     }
 
     public AddRecordFragment() {
@@ -70,6 +73,30 @@ public class AddRecordFragment extends Fragment {
         tv_calendar = (TextView) view.findViewById(R.id.tv_calendar);
         date = new Date();
 
+        tv_calendar.setText(new SimpleDateFormat("yy/MM/dd").format(date));
+        tv_clock.setText(new SimpleDateFormat("hh:mm").format(date));
+
+        //日历选择 启动CalendarFragment
+        ll_calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction()
+                        .add(R.id.fragme_main,new CalndarFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+            }
+        });
+        //时间选择
+        ll_clock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFragmentManager().beginTransaction()
+                        .add(R.id.fragme_main,new ClockFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         //添加记录
         bt_addRecord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,8 +114,6 @@ public class AddRecordFragment extends Fragment {
                 Toast.makeText(getActivity(), "剩余金额 : "+user.getAmount(), Toast.LENGTH_SHORT).show();
             }
         });
-        tv_calendar.setText(new SimpleDateFormat("yy/MM/dd").format(date));
-        tv_clock.setText(new SimpleDateFormat("hh:mm").format(date));
     }
 
 
@@ -96,5 +121,24 @@ public class AddRecordFragment extends Fragment {
     public void onPause() {
         super.onPause();
         mainFragment.refurbish();
+    }
+
+    public static Date getDate() {
+        return date;
+    }
+
+    public static void setDate(int year, int month, int day) {
+        date.setYear(year);
+        date.setMonth(month);
+        date.setDate(day);
+
+        thisFragment.tv_calendar.setText(new SimpleDateFormat("yy/MM/dd").format(date));
+    }
+
+    public static void setTime(int hour, int minute) {
+        date.setMinutes(minute);
+        date.setHours(hour);
+
+        thisFragment.tv_clock.setText(new SimpleDateFormat("HH:mm").format(date));
     }
 }

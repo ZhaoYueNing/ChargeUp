@@ -3,6 +3,8 @@ package com.zhao.ChargeUp;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zhao.ChargeUp.unit.MyDatabaseHelper;
 import com.zhao.ChargeUp.unit.Record;
 import com.zhao.ChargeUp.unit.User;
 
@@ -36,9 +39,14 @@ public class MainFragment extends Fragment {
     private FragmentManager fragmentManager;
     private User currentUser;
     private static MainFragment thisFragment;
+    private static SQLiteDatabase db;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //数据库初始化
+        MyDatabaseHelper myDatabaseHelper = new MyDatabaseHelper(getActivity());
+        db = myDatabaseHelper.getReadableDatabase();
         thisFragment = MainFragment.this;
         //添加23条测试数据
         if (User.getCurrentUser()==null)
@@ -74,6 +82,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 fragmentManager.beginTransaction()
+                        .add(R.id.fragme_main,new UserManagerFragment())
                         .addToBackStack(null)
                         .commit();
             }
@@ -145,5 +154,11 @@ public class MainFragment extends Fragment {
 
         thisFragment.tv_amount.setText("剩余金额 : "+thisFragment.currentUser.getAmount());
         thisFragment.tv_currentUserName.setText(thisFragment.currentUser.getName());
+    }
+
+    //获取db
+
+    public static SQLiteDatabase getDb() {
+        return db;
     }
 }

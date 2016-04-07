@@ -14,7 +14,7 @@ public class Record  {
     //对该条收支记录的备注
     private String note;
     //支出类型 收入或支出
-    private int RecordType;
+    private int recordType;
     //金额
     private double sum;
     //记录时间
@@ -28,7 +28,7 @@ public class Record  {
      */
     public Record(String note, int recordType, double sum,Date date) {
         this.note = note;
-        RecordType = recordType;
+        this.recordType = recordType;
         this.sum = sum;
         this.date = date;
     }
@@ -37,7 +37,7 @@ public class Record  {
         return note;
     }
     public int getRecordType() {
-        return RecordType;
+        return recordType;
     }
     public double getSum() {
         return sum;
@@ -47,7 +47,7 @@ public class Record  {
         this.note = note;
     }
     public void setRecordType(int recordType) {
-        RecordType = recordType;
+        this.recordType = recordType;
     }
     public void setSum(double sum) {
         this.sum = sum;

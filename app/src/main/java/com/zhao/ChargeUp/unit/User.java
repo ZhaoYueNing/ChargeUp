@@ -1,10 +1,12 @@
 package com.zhao.ChargeUp.unit;
 
+import android.content.ContentValues;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.zhao.ChargeUp.MainFragment;
 
+import java.net.ContentHandler;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class User {
     private List<Record> records;
     //用户的金额总量
     private double amount;
+    //对应数据库中的id字段 用来检索
+    private long _id;
 
     /**
      * 创建用户
@@ -33,7 +37,15 @@ public class User {
         User.users.add(this);
         //将新建的User自动设为当前用户
         User.currentUser=this;
+        ContentValues cv = new ContentValues();
+        cv.put("name",name);
+        cv.put("amount",amount);
+//        cv.put("isCurrent",true);
+        this._id = MainFragment.getDb().insert(MyDatabaseHelper.TABLE_USERS_NAME, null, cv);
+        cv.clear();
+        this.setCurrentUser();
     }
+
 
     public List<Record> getRecords() {
         return records;
@@ -57,20 +69,37 @@ public class User {
         return amount;
     }
 
-    public void setAmount(long amount) {
+    public void setAmount(double amount){
         this.amount = amount;
+        //数据库上更改
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("amount",amount);
+        MainFragment.getDb().update(MyDatabaseHelper.TABLE_USERS_NAME,
+                contentValues,"_id=?",new String[]{this.getId()+""});
     }
 
     public static LinkedList<User> getUsers() {
         return users;
     }
 
+    //设置当前用户
     public void setCurrentUser() {
         User.currentUser = this;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isCurrent",true);
+        MainFragment.getDb().update(MyDatabaseHelper.TABLE_USERS_NAME, contentValues, "_id=?",
+                new String[]{this._id + ""});
+        contentValues.clear();
+        contentValues.put("isCurrent",false);
+        MainFragment.getDb().update(MyDatabaseHelper.TABLE_USERS_NAME, contentValues, "_id<>?",
+                new String[]{this._id + ""});
     }
 
+    //设置当前用户
     public static void setCurrentUser(int position) {
-        User.currentUser = users.get(position);
+        User user = users.get(position);
+        User.currentUser = user;
+        user.setCurrentUser();
     }
     public static User getCurrentUser() {
         return User.currentUser;
@@ -120,10 +149,20 @@ public class User {
         }
 
         User removedUser = User.users.remove(position);
+        //数据库上删除
+        MainFragment.getDb().delete(MyDatabaseHelper.TABLE_USERS_NAME, "_id=?", new String[]{removedUser.getId() + ""});
         //如果被删除用户为当前用户则将第一个用户设置为当前用户
         if (removedUser.isCurrentUser()) {
             User.users.get(0).setCurrentUser();
         }
         return true;
+    }
+
+    public long getId() {
+        return _id;
+    }
+
+    public void setId(long _id) {
+        this._id = _id;
     }
 }

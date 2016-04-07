@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    android:descendantFocusability="blocksDescendants"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/iv_isCurrentUser"
@@ -16,5 +19,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="4"/>
+    <ImageButton
+        android:id="@+id/ib_userEditor"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ooopic_1459344955"/>
 
 </LinearLayout>

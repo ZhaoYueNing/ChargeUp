@@ -38,7 +38,7 @@ public class UserManagerFragment extends Fragment {
 
         bt_addUser = (Button) view.findViewById(R.id.bt_addUser);
         lv_users = (ListView) view.findViewById(R.id.lv_users);
-        usersAdapter = new UsersAdapter(getActivity(), R.layout.item_user_manager, User.getUsers());
+        usersAdapter = new UsersAdapter(getActivity(), R.layout.item_user_manager, User.getUsers(),this);
 
         bt_addUser.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -26,10 +26,8 @@ public class UserManagerFragment extends Fragment {
     private Button bt_addUser;
     private FragmentManager fragmentManager;
     private UsersAdapter usersAdapter;
-    private MainFragment mainFragment;
 
-    public UserManagerFragment(MainFragment mainFragment) {
-        this.mainFragment = mainFragment;
+    public UserManagerFragment() {
     }
 
     @Nullable
@@ -119,6 +117,6 @@ public class UserManagerFragment extends Fragment {
     //用户出现变更时刷新数据
     public void refurbish(){
         usersAdapter.notifyDataSetChanged();
-        mainFragment.refurbish(true);
+        MainFragment.refurbish(true);
     }
 }

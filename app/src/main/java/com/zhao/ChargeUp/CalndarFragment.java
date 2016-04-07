@@ -24,12 +24,13 @@ public class CalndarFragment extends Fragment {
         datePicker.setMaxDate(new Date().getTime());
         Date date = AddRecordFragment.getDate();
         Log.d("TAG++", date.getYear() + " " + date.getMonth());
+
         datePicker.init(date.getYear(), date.getMonth(), date.getDay(), new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                year = datePicker.getYear();
-                monthOfYear = datePicker.getMonth();
-                dayOfMonth = datePicker.getDayOfMonth();
+//                year = datePicker.getYear();
+//                monthOfYear = datePicker.getMonth();
+//                dayOfMonth = datePicker.getDayOfMonth();
 
                 AddRecordFragment.setDate(year,monthOfYear,dayOfMonth);
                 CalndarFragment.this.onDestroyView();

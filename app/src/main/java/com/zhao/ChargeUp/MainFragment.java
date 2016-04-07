@@ -35,16 +35,18 @@ public class MainFragment extends Fragment {
     private ArrayAdapter<Record> adapter;
     private FragmentManager fragmentManager;
     private User currentUser;
+    private static MainFragment thisFragment;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        thisFragment = MainFragment.this;
         //添加23条测试数据
         if (User.getCurrentUser()==null)
             testAddData(23);
         currentUser = User.getCurrentUser();
 
         View view = inflater.inflate(R.layout.fragme_main,container,false);
-        adapter = new RecordAdapter(getActivity(),  R.layout.item_record,  currentUser);
+        adapter = new RecordAdapter(getActivity(),  R.layout.item_record);
 
         lv_recodes = (ListView) view.findViewById(R.id.lv_recodes);
         lv_recodes.setAdapter(adapter);
@@ -62,7 +64,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
 
                 fragmentManager.beginTransaction()
-                        .add(R.id.fragme_main, new AddRecordFragment(MainFragment.this))
+                        .add(R.id.fragme_main, new AddRecordFragment())
                         .addToBackStack(null)
                         .commit();
             }
@@ -72,7 +74,6 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 fragmentManager.beginTransaction()
-                        .add(R.id.fragme_main,new UserManagerFragment(MainFragment.this))
                         .addToBackStack(null)
                         .commit();
             }
@@ -127,22 +128,22 @@ public class MainFragment extends Fragment {
      * 刷新
      * @param isChangUser 是否更改用户
      */
-    public void refurbish(boolean isChangUser) {
+    public static void refurbish(boolean isChangUser) {
         if (isChangUser == true) {
-            currentUser=User.getCurrentUser();
-            adapter = new RecordAdapter(getActivity(),R.layout.item_record,currentUser);
-            lv_recodes.setAdapter(adapter);
+            thisFragment.currentUser=User.getCurrentUser();
+            thisFragment.adapter = new RecordAdapter(thisFragment.getActivity(),R.layout.item_record);
+            thisFragment.lv_recodes.setAdapter(thisFragment.adapter);
         }
-        adapter.notifyDataSetChanged();
+        thisFragment.adapter.notifyDataSetChanged();
 
-        tv_amount.setText("剩余金额 : "+currentUser.getAmount());
-        tv_currentUserName.setText(currentUser.getName());
+        thisFragment.tv_amount.setText("剩余金额 : "+thisFragment.currentUser.getAmount());
+        thisFragment.tv_currentUserName.setText(thisFragment.currentUser.getName());
     }
 
-    public void refurbish() {
-        adapter.notifyDataSetChanged();
+    public static void refurbish() {
+        thisFragment.adapter.notifyDataSetChanged();
 
-        tv_amount.setText("剩余金额 : "+currentUser.getAmount());
-        tv_currentUserName.setText(currentUser.getName());
+        thisFragment.tv_amount.setText("剩余金额 : "+thisFragment.currentUser.getAmount());
+        thisFragment.tv_currentUserName.setText(thisFragment.currentUser.getName());
     }
 }

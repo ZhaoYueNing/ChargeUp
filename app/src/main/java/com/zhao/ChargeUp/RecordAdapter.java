@@ -23,10 +23,10 @@ public class RecordAdapter extends ArrayAdapter<Record> {
     private int resource;
     private User user;
 
-    public RecordAdapter(Context context, int resource, User user) {
-        super(context, resource, user.getRecords());
-        this.resource = resource;
-        this.user = user;
+    public RecordAdapter(Context context, int resource) {
+        super(context, R.layout.item_record,User.getCurrentUser().getRecords());
+        this.resource = R.layout.item_record;
+        this.user = User.getCurrentUser();
     }
 
     @Override

@@ -42,15 +42,12 @@ public class AddRecordFragment extends Fragment {
     private View view;
 
 
-    public AddRecordFragment(MainFragment fragment) {
+    public AddRecordFragment() {
         this.user = User.getCurrentUser();
-        this.mainFragment = fragment;
         thisFragment = this;
     }
 
-    public AddRecordFragment() {
 
-    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -120,7 +117,7 @@ public class AddRecordFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mainFragment.refurbish();
+        MainFragment.refurbish();
     }
 
     public static Date getDate() {

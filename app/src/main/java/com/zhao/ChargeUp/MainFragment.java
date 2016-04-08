@@ -24,6 +24,7 @@ import com.zhao.ChargeUp.unit.Record;
 import com.zhao.ChargeUp.unit.Unit;
 import com.zhao.ChargeUp.unit.User;
 
+import java.util.Collections;
 import java.util.Date;
 
 
@@ -188,6 +189,7 @@ public class MainFragment extends Fragment {
                         user.addRecord(new Record(recordCursor));
                     } while (recordCursor.moveToNext());
                 }
+                Collections.sort(user.getRecords());
             } while (userCursor.moveToNext());
         } else {
             //数据库没有用户的情况下 自动新建默认用户

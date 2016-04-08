@@ -11,7 +11,7 @@ import java.util.Date;
  * Created by Zhao on 2016/3/27.
  * 收支记录
  */
-public class Record  {
+public class Record implements Comparable<Record> {
     //收入
     public final static int INCOME = 1;
     //支出
@@ -88,5 +88,10 @@ public class Record  {
 
     public long getId() {
         return _id;
+    }
+
+    @Override
+    public int compareTo(Record another) {
+        return (int) -(this.getDate().getTime()-another.getDate().getTime());
     }
 }

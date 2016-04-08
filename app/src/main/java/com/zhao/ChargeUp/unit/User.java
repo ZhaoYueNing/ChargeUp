@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.zhao.ChargeUp.MainFragment;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -85,6 +86,7 @@ public class User {
             amount+=record.getSum();
         }
         records.add(0,record);
+        Collections.sort(records);
     }
 
     public double getAmount() {

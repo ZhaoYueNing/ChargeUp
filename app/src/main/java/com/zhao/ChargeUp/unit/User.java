@@ -1,6 +1,8 @@
 package com.zhao.ChargeUp.unit;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,6 +33,10 @@ public class User {
      * @param amount 初始资金
      */
     public User(String name, double amount) {
+        this(name, amount, true);
+    }
+
+    public User(String name, double amount, boolean isCurrent) {
         this.name = name;
         this.amount = amount;
         this.records = new LinkedList<Record>();
@@ -40,12 +46,32 @@ public class User {
         ContentValues cv = new ContentValues();
         cv.put("name",name);
         cv.put("amount",amount);
-//        cv.put("isCurrent",true);
+        cv.put("isCurrent",false);
         this._id = MainFragment.getDb().insert(MyDatabaseHelper.TABLE_USERS_NAME, null, cv);
         cv.clear();
-        this.setCurrentUser();
+        if (isCurrent)
+            this.setCurrentUser();
     }
+    //用于从数据库读取用户 不会重复添加用户到数据库
+    private User(int _id, String name, double amount, boolean isCurrent) {
+        this._id=_id;
+        this.name = name;
+        this.amount = amount;
+        this.records = new LinkedList<Record>();
+        if (isCurrent) {
+            this.setCurrentUser();
+        }
+        users.add(this);
+    }
+    public static User readUserInDatabase(Cursor cursor) {
+        int _id = cursor.getInt(cursor.getColumnIndex("_id"));
+        String name = cursor.getString(cursor.getColumnIndex("name"));
+        double amount = cursor.getDouble(cursor.getColumnIndex("amount"));
+        boolean isCurrent = cursor.getInt(cursor.getColumnIndex("isCurrent"))
+                == 1 ? true : false;
+        return new User(_id,name, amount, isCurrent);
 
+    }
 
     public List<Record> getRecords() {
         return records;

@@ -3,6 +3,7 @@ package com.zhao.ChargeUp;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
@@ -45,12 +46,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //数据库初始化
-        MyDatabaseHelper myDatabaseHelper = new MyDatabaseHelper(getActivity());
-        db = myDatabaseHelper.getReadableDatabase();
+        dataInit();
         thisFragment = MainFragment.this;
-        //添加23条测试数据
-        if (User.getCurrentUser()==null)
-            testAddData(23);
         currentUser = User.getCurrentUser();
 
         View view = inflater.inflate(R.layout.fragme_main,container,false);
@@ -156,9 +153,33 @@ public class MainFragment extends Fragment {
         thisFragment.tv_currentUserName.setText(thisFragment.currentUser.getName());
     }
 
-    //获取db
-
+    /**
+     * 获取数据库
+     * @return 数据库
+     */
     public static SQLiteDatabase getDb() {
         return db;
+    }
+
+    /**
+     * 初始化数据 从数据库读取用户 和 记录 信息
+     */
+    public void dataInit() {
+        //获取数据库
+        MyDatabaseHelper myDatabaseHelper = new MyDatabaseHelper(getActivity());
+        db = myDatabaseHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(MyDatabaseHelper.TABLE_USERS_NAME,
+                new String[]{"_id", "name", "amount", "isCurrent"},
+                null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                User.readUserInDatabase(cursor);
+            } while (cursor.moveToNext());
+        } else {
+            //数据库没有用户的情况下 自动新建默认用户
+            new User("Default", 0);
+        }
+
     }
 }

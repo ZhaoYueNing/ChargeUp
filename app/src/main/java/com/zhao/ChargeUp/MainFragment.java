@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.zhao.ChargeUp.unit.MyDatabaseHelper;
 import com.zhao.ChargeUp.unit.Record;
+import com.zhao.ChargeUp.unit.Unit;
 import com.zhao.ChargeUp.unit.User;
 
 import java.util.Date;
@@ -41,6 +42,8 @@ public class MainFragment extends Fragment {
     private User currentUser;
     private static MainFragment thisFragment;
     private static SQLiteDatabase db;
+    private static int OPERAND=0;
+
 
     @Nullable
     @Override
@@ -123,7 +126,7 @@ public class MainFragment extends Fragment {
     public User testAddData(int size) {
         User testUser = new User("TestUser", 1000);
         for(int i=0;i<size;i++) {
-            Record record = new Record("#"+i,i%2,1000+i*2,new Date());
+            Record record = new Record("#"+i,i%2,1000+i*2,new Date(),User.getCurrentUser());
             testUser.addRecord(record);
         }
         return testUser;
@@ -165,21 +168,31 @@ public class MainFragment extends Fragment {
      * 初始化数据 从数据库读取用户 和 记录 信息
      */
     public void dataInit() {
+        if (OPERAND!=0)
+            return;
         //获取数据库
         MyDatabaseHelper myDatabaseHelper = new MyDatabaseHelper(getActivity());
         db = myDatabaseHelper.getReadableDatabase();
 
-        Cursor cursor = db.query(MyDatabaseHelper.TABLE_USERS_NAME,
+        Cursor userCursor = db.query(MyDatabaseHelper.TABLE_USERS_NAME,
                 new String[]{"_id", "name", "amount", "isCurrent"},
                 null, null, null, null, null);
-        if (cursor.moveToFirst()) {
+        if (userCursor.moveToFirst()) {
             do {
-                User.readUserInDatabase(cursor);
-            } while (cursor.moveToNext());
+                User user = User.readUserInDatabase(userCursor);
+                Cursor recordCursor = db.query(MyDatabaseHelper.TABLE_Records_NAME,
+                        new String[]{"_id", "note", "recordType", "sum", "date", "userId"},
+                        "userId=?", new String[]{user.getId() + ""}, null, null, null);
+                if (recordCursor.moveToFirst()) {
+                    do {
+                        user.addRecord(new Record(recordCursor));
+                    } while (recordCursor.moveToNext());
+                }
+            } while (userCursor.moveToNext());
         } else {
             //数据库没有用户的情况下 自动新建默认用户
             new User("Default", 0);
         }
-
+        OPERAND++;
     }
 }

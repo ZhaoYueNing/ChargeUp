@@ -106,7 +106,7 @@ public class AddRecordFragment extends Fragment {
                     return;
                 }
                 int recordType = rb_income.isChecked() ? Record.INCOME : Record.EXPEND;
-                Record record = new Record(note, recordType, Double.parseDouble(sum), date);
+                Record record = new Record(note, recordType, Double.parseDouble(sum), date,User.getCurrentUser());
                 user.addRecord(record);
                 Toast.makeText(getActivity(), "剩余金额 : "+user.getAmount(), Toast.LENGTH_SHORT).show();
             }

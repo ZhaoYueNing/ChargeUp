@@ -20,7 +20,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             "note text," +
             "recordType integer," +
             "sum real," +
-            "date timestamp," +
+            "date integer," +
             "userId integer)";
     public MyDatabaseHelper(Context context) {
         super(context, "Data.db", null, 1);

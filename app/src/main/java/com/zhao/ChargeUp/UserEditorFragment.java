@@ -27,6 +27,7 @@ public class UserEditorFragment extends Fragment {
                 double amount = Double.parseDouble(et_amount.getText().toString());
                 User.getCurrentUser().setAmount(amount);
                 MainFragment.refurbish();
+                getFragmentManager().popBackStack();
             }
         });
         return view;

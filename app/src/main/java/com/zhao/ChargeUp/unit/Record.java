@@ -86,7 +86,7 @@ public class Record  {
         this.date = date;
     }
 
-    public long get_id() {
+    public long getId() {
         return _id;
     }
 }

@@ -2,13 +2,9 @@ package com.zhao.ChargeUp.unit;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.zhao.ChargeUp.MainFragment;
 
-import java.net.ContentHandler;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -151,6 +147,8 @@ public class User {
             return false;
         }
         Record removedRecord = records.remove(position);
+        MainFragment.getDb().delete(MyDatabaseHelper.TABLE_Records_NAME,
+                "_id=?", new String[]{removedRecord.getId()+""});
         if (removedRecord.getRecordType() == Record.EXPEND) {
             this.amount+=removedRecord.getSum();
         }else{
@@ -176,7 +174,10 @@ public class User {
 
         User removedUser = User.users.remove(position);
         //数据库上删除
-        MainFragment.getDb().delete(MyDatabaseHelper.TABLE_USERS_NAME, "_id=?", new String[]{removedUser.getId() + ""});
+        MainFragment.getDb().delete(MyDatabaseHelper.TABLE_USERS_NAME,
+                "_id=?", new String[]{removedUser.getId() + ""});
+        MainFragment.getDb().delete(MyDatabaseHelper.TABLE_Records_NAME,
+                "userId=?", new String[]{removedUser.getId() + ""});
         //如果被删除用户为当前用户则将第一个用户设置为当前用户
         if (removedUser.isCurrentUser()) {
             User.users.get(0).setCurrentUser();
